@@ -118,8 +118,5 @@ class Grille:
         return self.hauteur
 
 
-t = Grille(5, 6)
-
-t.creer_tableau()
-
-print(t)
+if __name__ == "__main__":
+    print(Grille(6,5))
