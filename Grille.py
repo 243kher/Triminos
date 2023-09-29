@@ -4,6 +4,8 @@ class Grille:
         self.hauteur = hauteur
         self.tableau = tableau
         self.num_actuel = 0
+        self.format_tuile = [
+            [(1, 0), (0, -1)], [(1, 0), (0, 1)], [(-1, 0), (0, 1)], [(-1, 0), (0, -1)]]
 
     def creer_tableau(self):
         """
@@ -11,30 +13,41 @@ class Grille:
         initialisé selon les attributs longueur(int) et hauteur(int) de l'objet
         """
 
-        self.tableau = [[0 for j in range(self.longueur)]
-                        for i in range(self.hauteur)]
+        self.tableau = [[0 for x in range(self.longueur)]
+                        for y in range(self.hauteur)]
 
     def est_vide(self):
         """
         Méthode qui retourne un booléen si le tableau est vide
         """
 
-        for i in range(self.hauteur):
-            for j in range(self.longueur):
-                if self.tableau[i][j] != 0:
+        for y in range(self.hauteur):
+            for x in range(self.longueur):
+                if self.tableau[y][x] != 0:
                     return False
         return True
 
     def choisir_trimino(self, coordonnees, type_tuile):
-        """ """
-        pass
+        """ 
+        Méthode qui retourne une liste de coordonnées tuple d'une tuile selon la coordonné choisie et son type
+        Type 0: L ;Type 1: Г ;Type 2: ꓶ ;Type 3: ⅃
+        la case de coordonnées (x, y) représente en colonne x et en ligne y.
+        premiere coordonée d'après l'angle puis horizontale et vertical
+        """
+        return [coordonnees, (coordonnees[0]+self.format_tuile[type_tuile][0][0], 
+                            coordonnees[1]+self.format_tuile[type_tuile][0][1]), 
+                            (coordonnees[0]+self.format_tuile[type_tuile][1][0], 
+                            coordonnees[1]+self.format_tuile[type_tuile][1][1])
+                            ]
+
+        
 
     def liste_vide(self):
         liste_vide = []
-        for t in range(self.hauteur):
-            for i in range(self.longueur):
-                if self.tableau[t][i] == 0:
-                    liste_vide.append((t, i))
+        for y in range(self.hauteur):
+            for x in range(self.longueur):
+                if self.tableau[y][x] == 0:
+                    liste_vide.append((x, y))
         return liste_vide
 
     def verifier_tuile_vide(self, liste_vide):
@@ -65,7 +78,7 @@ class Grille:
         self.num_actuel += 1
 
         for x_y in tuile:
-            self.tableau[x_y[0]][x_y[1]] = self.num_actuel
+            self.tableau[x_y[1]][x_y[0]] = self.num_actuel
 
     def obtenir_tuile(self, num_tuile):
         """
@@ -78,10 +91,10 @@ class Grille:
 
         coordonnees = []
 
-        for i in range(self.hauteur):
-            for j in range(self.longueur):
-                if self.tableau[i][j] == num_tuile:
-                    coordonnees.append((i, j))
+        for y in range(self.hauteur):
+            for x in range(self.longueur):
+                if self.tableau[y][x] == num_tuile:
+                    coordonnees.append((x, y))
 
         return coordonnees
 
@@ -90,10 +103,10 @@ class Grille:
         Méthode qui enlève la dernière tuile posée
         """
 
-        for i in range(self.hauteur):
-            for j in range(self.longueur):
-                if self.tableau[i][j] == self.num_actuel:
-                    self.tableau[i][j] = 0
+        for y in range(self.hauteur):
+            for x in range(self.longueur):
+                if self.tableau[y][x] == self.num_actuel:
+                    self.tableau[y][x] = 0
 
         self.num_actuel -= 1
 
