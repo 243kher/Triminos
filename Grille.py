@@ -152,7 +152,7 @@ class Grille:
             s += "\n" + line
         return s
 
-    def ajouter_tuile(x, y, type_tuile):
+    def ajouter_tuile(self, x, y, type_tuile):
         """
         Méthode qui tente d'ajouter une tuile au tableau à partir des coordonnées spécifiées et du type de tuile.
 
