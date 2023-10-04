@@ -1,5 +1,12 @@
 class Grille:
     def __init__(self, longueur, hauteur, tableau=[]):
+        """
+        Initialise une instance de la classe Grille avec une longueur, une hauteur et un tableau.
+        
+        :param longueur: La longueur de la grille (nombre de colonnes).
+        :param hauteur: La hauteur de la grille (nombre de lignes).
+        :param tableau: Le tableau représentant la grille (par défaut vide).
+        """
         self.longueur = longueur
         self.hauteur = hauteur
         self.tableau = tableau
@@ -18,7 +25,8 @@ class Grille:
 
     def est_vide(self):
         """
-        Méthode qui retourne un booléen si le tableau est vide
+        Méthode qui retourne True si le tableau est vide, False sinon.
+
         """
 
         for y in range(self.hauteur):
@@ -43,6 +51,9 @@ class Grille:
         
 
     def liste_vide(self):
+        """
+        Méthode qui retourne une liste des coordonnées des cases vides dans le tableau.
+        """
         liste_vide = []
         for y in range(self.hauteur):
             for x in range(self.longueur):
@@ -51,6 +62,13 @@ class Grille:
         return liste_vide
 
     def verifier_tuile_vide(self, liste_vide):
+        """
+        Méthode qui vérifie si une tuile peut être placée dans des cases vides adjacentes.
+        
+        liste_vide: La liste des coordonnées des cases vides.
+        return: True si une tuile peut être placée, False sinon.
+        """
+        
         for t in liste_vide:
             if (t[0], t[1] - 1) in liste_vide and (t[0] - 1, t[1]) in liste_vide:
                 return True
@@ -67,7 +85,17 @@ class Grille:
         Méthode qui verifier si il y a de la place pour ajouter un trimino
         Retourne un booléen
         """
-        pass
+        for y in range(self.hauteur):
+        for x in range(self.longueur):
+            if self.tableau[y][x] == 0:
+                if (y > 0 and self.tableau[y - 1][x] == 0) or \
+                   (x > 0 and self.tableau[y][x - 1] == 0) or \
+                   (y < self.hauteur - 1 and self.tableau[y + 1][x] == 0) or \
+                   (x < self.longueur - 1 and self.tableau[y][x + 1] == 0):
+                    return True
+
+    
+        return False
 
     def ajouter_tuile(self, tuile):
         """
@@ -125,9 +153,15 @@ class Grille:
         return s
 
     def obtenir_l(self):
+        """
+        Méthode qui retourne la longueur de la grille.
+        """
         return self.longueur
 
     def obtenir_h(self):
+        """
+        Méthode qui retourne la hauteur de la grille.
+        """
         return self.hauteur
 
 
