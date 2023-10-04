@@ -86,13 +86,13 @@ class Grille:
         Retourne un booléen
         """
         for y in range(self.hauteur):
-        for x in range(self.longueur):
-            if self.tableau[y][x] == 0:
-                if (y > 0 and self.tableau[y - 1][x] == 0) or \
-                   (x > 0 and self.tableau[y][x - 1] == 0) or \
-                   (y < self.hauteur - 1 and self.tableau[y + 1][x] == 0) or \
-                   (x < self.longueur - 1 and self.tableau[y][x + 1] == 0):
-                    return True
+            for x in range(self.longueur):
+                if self.tableau[y][x] == 0:
+                    if (y > 0 and self.tableau[y - 1][x] == 0) or \
+                       (x > 0 and self.tableau[y][x - 1] == 0) or \
+                       (y < self.hauteur - 1 and self.tableau[y + 1][x] == 0) or \
+                       (x < self.longueur - 1 and self.tableau[y][x + 1] == 0):
+                        return True
 
     
         return False
@@ -102,7 +102,7 @@ class Grille:
         Méthode qui ajoute une tuile au tableau d'après ses coordonnées
             tuile : liste de tuple de coordonées (x,y)
         """
-
+        if 
         self.num_actuel += 1
 
         for x_y in tuile:
