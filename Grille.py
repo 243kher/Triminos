@@ -152,6 +152,29 @@ class Grille:
             s += "\n" + line
         return s
 
+    def ajouter_tuile(x, y, type_tuile):
+        """
+        Méthode qui tente d'ajouter une tuile au tableau à partir des coordonnées spécifiées et du type de tuile.
+
+        x: La coordonnée x de la case où la tuile sera ajoutée.
+        y: La coordonnée y de la case où la tuile sera ajoutée.
+        type_tuile: Le type de tuile à ajouter.
+        return: True si l'ajout est possible, False sinon.
+        """
+        if x < 0 or x >= self.longueur or y < 0 or y >= self.hauteur:
+            return False
+        tuile_coordonnees = self.choisir_trimino((x, y), type_tuile)
+
+        for x, y in tuile_coords:
+            if x < 0 or x >= self.longueur or y < 0 or y >= self.hauteur or self.tableau[y][x] != 0:
+                return False
+            
+        for x, y in tuile_coordonnees:
+            self.tableau[y][x] = self.num_actuel
+            
+        self.num_actuel += 1
+        return True
+
     def obtenir_l(self):
         """
         Méthode qui retourne la longueur de la grille.
