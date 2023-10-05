@@ -97,17 +97,6 @@ class Grille:
     
         return False
 
-    def ajouter_tuile(self, tuile):
-        """
-        Méthode qui ajoute une tuile au tableau d'après ses coordonnées
-            tuile : liste de tuple de coordonées (x,y)
-        """
-        if 
-        self.num_actuel += 1
-
-        for x_y in tuile:
-            self.tableau[x_y[1]][x_y[0]] = self.num_actuel
-
     def obtenir_tuile(self, num_tuile):
         """
         Méthode qui obtient les coordonées de la tuile 'num_tuile'
