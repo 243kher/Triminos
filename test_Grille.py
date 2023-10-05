@@ -89,9 +89,8 @@ def test_verifier_tuile_vide():
 
     grille.creer_tableau()
 
-    t=grille.cases_vide()
     # Teste la vérification d'une tuile vide sur une grille vide
-    assert grille.verifier_tuile_vide(t) == True 
+    assert grille.verifier_tuile_vide() == True 
 
     # Ajoute quelques tuiles
     grille.ajouter_tuile(0, 0, 1)  # Ajoute une tuile de type 0 à la position (1, 1)
@@ -99,8 +98,7 @@ def test_verifier_tuile_vide():
     grille.ajouter_tuile(1, 2, 3)  # Ajoute une tuile de type 2 à la position (2, 1)
     grille.ajouter_tuile(3, 2, 3)
     # Teste la vérification d'une tuile vide sur la grille actuelle
-    k=grille.cases_vide()
-    assert grille.verifier_tuile_vide(k) == False  # Les coordonnées (1, 0) et (2, 0) sont vides et forment un trimino valide
+    assert grille.verifier_tuile_vide() == False  # Les coordonnées (1, 0) et (2, 0) sont vides et forment un trimino valide
 
 
 def test_verifier_tableau():
