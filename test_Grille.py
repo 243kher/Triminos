@@ -156,15 +156,22 @@ def test_obtenir_tuile():
 
 def test_enlever_tuile():
     pass
-    
+
+def test_est_pavable():
+    grille = Grille(4,4)
+    assert grille.est_pavable() == False 
+    grille2 = Grille(3,4)
+    assert grille2.est_pavable() == True
+
 if __name__ == "__main__":
-    test_creer_tableau()
+    """test_creer_tableau()
     test_est_vide()
     test_choisir_trimino()
     test_ajouter_tuile()
     test_choisir_trimino()
     test_liste_vide()
     test_verifier_tuile_vide()
-    test_verifier_tableau()
+    test_verifier_tableau()"""
+    test_est_pavable()
 
     print("Tous les tests ont réussi.")

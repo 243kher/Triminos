@@ -175,7 +175,15 @@ class Grille:
         Méthode qui retourne la hauteur de la grille.
         """
         return self.hauteur
+    
+    def est_pavable(self):
+        """Méthode qui vérifie que la grille est pavable"""
+        return ((self.longueur * self.hauteur) % 3) == 0   #Comme on pose des figures qui sont composées de 3 pavés il faut vérifier que notre quadrillage peut être recouvert de figures"""
 
 
 if __name__ == "__main__":
     print(Grille(6,5))
+
+
+grille = Grille(3,4)
+print(grille.est_pavable())
