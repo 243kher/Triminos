@@ -3,9 +3,9 @@ class Grille:
         """
         Initialise une instance de la classe Grille avec une longueur, une hauteur et un tableau.
         
-        :param longueur: La longueur de la grille (nombre de colonnes).
-        :param hauteur: La hauteur de la grille (nombre de lignes).
-        :param tableau: Le tableau représentant la grille (par défaut vide).
+        longueur: La longueur de la grille (nombre de colonnes).
+        hauteur: La hauteur de la grille (nombre de lignes).
+        tableau: Le tableau représentant la grille (par défaut vide).
         """
         self.longueur = longueur
         self.hauteur = hauteur
