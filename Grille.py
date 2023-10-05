@@ -61,16 +61,20 @@ class Grille:
                     liste_vide.append((x, y))
         return liste_vide
 
-    def cases_vide(self):
+    def verifier_tuile_vide(self):
         """
-        Méthode qui retourne une liste des coordonnées des cases vides dans le tableau.
+        Méthode qui vérifie si une tuile peut être placée dans des cases vides adjacentes.
+        
+        liste_vide: La liste des coordonnées des cases vides.
+        return: True si une tuile peut être placée, False sinon.
         """
-        liste_vide = []
-        for y in range(self.hauteur):
-            for x in range(self.longueur):
-                if self.tableau[y][x] == 0:
-                    liste_vide.append((x, y))
-        return liste_vide
+        liste_vide = self.cases_vide()
+        for t in liste_vide:
+            for k in range(4):
+                if (t[0]+self.format_tuile[k][0][0], t[1]+self.format_tuile[k][0][1]) in liste_vide and (t[0]+self.format_tuile[k][1][0], t[1]+self.format_tuile[k][1][1]) in liste_vide:
+                    return True
+
+        return False
 
     def verifier_tableau(self):
         """
