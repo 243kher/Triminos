@@ -10,7 +10,7 @@ class Grille:
         self.longueur = longueur
         self.hauteur = hauteur
         self.tableau = tableau
-        self.num_actuel = 0
+        self.num_actuel = 1
         self.format_tuile = [
             [(1, 0), (0, -1)], [(1, 0), (0, 1)], [(-1, 0), (0, 1)], [(-1, 0), (0, -1)]]
 
@@ -50,7 +50,7 @@ class Grille:
 
         
 
-    def liste_vide(self):
+    def cases_vide(self):
         """
         Méthode qui retourne une liste des coordonnées des cases vides dans le tableau.
         """
@@ -154,7 +154,7 @@ class Grille:
             return False
         tuile_coordonnees = self.choisir_trimino((x, y), type_tuile)
 
-        for x, y in tuile_coords:
+        for x, y in tuile_coordonnees:
             if x < 0 or x >= self.longueur or y < 0 or y >= self.hauteur or self.tableau[y][x] != 0:
                 return False
             
