@@ -2,7 +2,7 @@ class Grille:
     def __init__(self, longueur, hauteur, tableau=[]):
         """
         Initialise une instance de la classe Grille avec une longueur, une hauteur et un tableau.
-        
+
         longueur: La longueur de la grille (nombre de colonnes).
         hauteur: La hauteur de la grille (nombre de lignes).
         tableau: Le tableau représentant la grille (par défaut vide).
@@ -12,7 +12,11 @@ class Grille:
         self.tableau = tableau
         self.num_actuel = 1
         self.format_tuile = [
-            [(1, 0), (0, -1)], [(1, 0), (0, 1)], [(-1, 0), (0, 1)], [(-1, 0), (0, -1)]]
+            [(1, 0), (0, -1)],
+            [(1, 0), (0, 1)],
+            [(-1, 0), (0, 1)],
+            [(-1, 0), (0, -1)],
+        ]
 
     def creer_tableau(self):
         """
@@ -20,8 +24,7 @@ class Grille:
         initialisé selon les attributs longueur(int) et hauteur(int) de l'objet
         """
 
-        self.tableau = [[0 for x in range(self.longueur)]
-                        for y in range(self.hauteur)]
+        self.tableau = [[0 for x in range(self.longueur)] for y in range(self.hauteur)]
 
     def est_vide(self):
         """
@@ -36,19 +39,23 @@ class Grille:
         return True
 
     def choisir_trimino(self, coordonnees, type_tuile):
-        """ 
+        """
         Méthode qui retourne une liste de coordonnées tuple d'une tuile selon la coordonné choisie et son type
         Type 0: L ;Type 1: Г ;Type 2: ꓶ ;Type 3: ⅃
         la case de coordonnées (x, y) représente en colonne x et en ligne y.
         premiere coordonée d'après l'angle puis horizontale et vertical
         """
-        return [coordonnees, (coordonnees[0]+self.format_tuile[type_tuile][0][0], 
-                            coordonnees[1]+self.format_tuile[type_tuile][0][1]), 
-                            (coordonnees[0]+self.format_tuile[type_tuile][1][0], 
-                            coordonnees[1]+self.format_tuile[type_tuile][1][1])
-                            ]
-
-        
+        return [
+            coordonnees,
+            (
+                coordonnees[0] + self.format_tuile[type_tuile][0][0],
+                coordonnees[1] + self.format_tuile[type_tuile][0][1],
+            ),
+            (
+                coordonnees[0] + self.format_tuile[type_tuile][1][0],
+                coordonnees[1] + self.format_tuile[type_tuile][1][1],
+            ),
+        ]
 
     def cases_vide(self):
         """
@@ -64,14 +71,20 @@ class Grille:
     def verifier_tuile_vide(self):
         """
         Méthode qui vérifie si une tuile peut être placée dans des cases vides adjacentes.
-        
+
         liste_vide: La liste des coordonnées des cases vides.
         return: True si une tuile peut être placée, False sinon.
         """
         liste_vide = self.cases_vide()
         for t in liste_vide:
             for k in range(4):
-                if (t[0]+self.format_tuile[k][0][0], t[1]+self.format_tuile[k][0][1]) in liste_vide and (t[0]+self.format_tuile[k][1][0], t[1]+self.format_tuile[k][1][1]) in liste_vide:
+                if (
+                    t[0] + self.format_tuile[k][0][0],
+                    t[1] + self.format_tuile[k][0][1],
+                ) in liste_vide and (
+                    t[0] + self.format_tuile[k][1][0],
+                    t[1] + self.format_tuile[k][1][1],
+                ) in liste_vide:
                     return True
 
         return False
@@ -84,13 +97,14 @@ class Grille:
         for y in range(self.hauteur):
             for x in range(self.longueur):
                 if self.tableau[y][x] == 0:
-                    if (y > 0 and self.tableau[y - 1][x] == 0) or \
-                       (x > 0 and self.tableau[y][x - 1] == 0) or \
-                       (y < self.hauteur - 1 and self.tableau[y + 1][x] == 0) or \
-                       (x < self.longueur - 1 and self.tableau[y][x + 1] == 0):
+                    if (
+                        (y > 0 and self.tableau[y - 1][x] == 0)
+                        or (x > 0 and self.tableau[y][x - 1] == 0)
+                        or (y < self.hauteur - 1 and self.tableau[y + 1][x] == 0)
+                        or (x < self.longueur - 1 and self.tableau[y][x + 1] == 0)
+                    ):
                         return True
 
-    
         return False
 
     def obtenir_tuile(self, num_tuile):
@@ -151,12 +165,18 @@ class Grille:
         tuile_coordonnees = self.choisir_trimino((x, y), type_tuile)
 
         for x, y in tuile_coordonnees:
-            if x < 0 or x >= self.longueur or y < 0 or y >= self.hauteur or self.tableau[y][x] != 0:
+            if (
+                x < 0
+                or x >= self.longueur
+                or y < 0
+                or y >= self.hauteur
+                or self.tableau[y][x] != 0
+            ):
                 return False
-            
+
         for x, y in tuile_coordonnees:
             self.tableau[y][x] = self.num_actuel
-            
+
         self.num_actuel += 1
         return True
 
@@ -171,15 +191,17 @@ class Grille:
         Méthode qui retourne la hauteur de la grille.
         """
         return self.hauteur
-    
+
     def est_pavable(self):
         """Méthode qui vérifie que la grille est pavable"""
-        return ((self.longueur * self.hauteur) % 3) == 0   #Comme on pose des figures qui sont composées de 3 pavés il faut vérifier que notre quadrillage peut être recouvert de figures"""
+        return (
+            (self.longueur * self.hauteur) % 3
+        ) == 0  # Comme on pose des figures qui sont composées de 3 pavés il faut vérifier que notre quadrillage peut être recouvert de figures"""
 
 
 if __name__ == "__main__":
-    print(Grille(6,5))
+    print(Grille(6, 5))
 
 
-grille = Grille(3,4)
+grille = Grille(3, 4)
 print(grille.est_pavable())
