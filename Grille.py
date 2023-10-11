@@ -132,7 +132,7 @@ class Grille:
 
         for y in range(self.hauteur):
             for x in range(self.longueur):
-                if self.tableau[y][x] == self.num_actuel:
+                if self.tableau[y][x] == self.num_actuel-1:
                     self.tableau[y][x] = 0
 
         self.num_actuel -= 1
