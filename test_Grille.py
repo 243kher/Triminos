@@ -178,16 +178,24 @@ def test_verifier_tableau():
     assert grille.verifier_tableau() == False
 
 
-def test_ajouter_tuile():
-    pass
-
-
 def test_obtenir_tuile():
-    pass
-
+    grille = Grille(4, 4)
+    grille.creer_tableau()
+    grille.ajouter_tuile(0, 0, 1)  # Ajout d'une tuile de type 1 (Г) aux coordonnées (0, 0)
+    grille.ajouter_tuile(2, 1, 3)  
+    grille.ajouter_tuile(3, 3, 3)
+    # Vérification des coordonnées 
+    assert(grille.obtenir_tuile(1)==[(0, 0), (1, 0), (0, 1)])
+    assert(grille.obtenir_tuile(2)==[(2, 0), (1, 1), (2, 1)])
+    assert(grille.obtenir_tuile(3)==[(3, 2), (2, 3), (3, 3)])
 
 def test_enlever_tuile():
-    pass
+    grille = Grille(4, 4)
+    grille.creer_tableau()
+    grille.ajouter_tuile(0, 0, 1)
+    grille.ajouter_tuile(2, 1, 1)
+    grille.enlever_tuile()
+    assert grille.obtenir_tuile(2) == []
 
 
 def test_est_pavable():
@@ -198,14 +206,14 @@ def test_est_pavable():
 
 
 if __name__ == "__main__":
-    """test_creer_tableau()
+    test_creer_tableau()
     test_est_vide()
     test_choisir_trimino()
     test_ajouter_tuile()
     test_choisir_trimino()
     test_cases_vide()
     test_verifier_tuile_vide()
-    test_verifier_tableau()"""
     test_est_pavable()
+    test_obtenir_tuile()
 
     print("Tous les tests ont réussi.")
