@@ -52,9 +52,9 @@ def test_choisir_trimino():
 
 def test_ajouter_tuile():
     grille = Grille(4, 4)
-    assert (
-        grille.ajouter_tuile(0, 0, 0) == True
-    )  # Ajoute une tuile de type 0 à la position (0, 0)
+    grille.creer_tableau()
+    assert (grille.ajouter_tuile(0, 0, 1) == True)  # Ajoute une tuile de type 0 à la position (0, 0)
+    grille.ajouter_tuile(5, 5, 0) 
     assert grille.ajouter_tuile(5, 5, 0) == False
 
 
