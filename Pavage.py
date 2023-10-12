@@ -39,6 +39,37 @@ def pavage(grille : Grille, types : list) :
 
     return False
             
+def pavage2(grille, types, tuile_a_tester):
+    if grille.est_pavable() == True:
+        if grille.verifier_tuile_vide() == False:   #test qui vérifie si on a fini
+            if grille.cases_vide() == []:   #test qui vérifie si on obtient une grille valable ou non 
+                return True
+            else:
+                return False
+        case_courante = première_case_vide(grille)  #case sur laquelle on cherche à placer chaque tuile
+        if grille.ajouter_tuile(case_courante[0], case_courante[1], types[tuile_a_tester]) == True:
+            test = pavage2(grille, types, tuile_a_tester)
+            if test == True:
+                return grille.tableau
+            else:
+                grille.enlever_tuile()
+                tuile_a_tester += 1
+                if tuile_a_tester == 4:
+                    tuile_a_tester = 0
+                return pavage2(grille, types, tuile_a_tester)
+        else:
+            tuile_a_tester += 1
+            if tuile_a_tester == 4:
+                tuile_a_tester = 0
+            return pavage2(grille, types, tuile_a_tester)        
+
+
+
+g = Grille(3,3)
+g.creer_tableau()
+print(g.est_vide())
+pavage2(g, [0, 1, 2, 3], 0)
+print(g)
 
             
 
@@ -50,7 +81,7 @@ print(g.est_vide())
 pavage(g, [0, 1, 2, 3])
 print(g)
 
-
+pavage2(g, [0, 1, 2, 3], 0)
 
 g = Grille(4,6)
 print(g.est_vide())
