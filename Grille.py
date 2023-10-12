@@ -89,23 +89,6 @@ class Grille:
 
         return False
 
-    def verifier_tableau(self):
-        """
-        Méthode qui verifier si il y a de la place pour ajouter un trimino
-        Retourne un booléen
-        """
-        for y in range(self.hauteur):
-            for x in range(self.longueur):
-                if self.tableau[y][x] == 0:
-                    if (
-                        (y > 0 and self.tableau[y - 1][x] == 0)
-                        or (x > 0 and self.tableau[y][x - 1] == 0)
-                        or (y < self.hauteur - 1 and self.tableau[y + 1][x] == 0)
-                        or (x < self.longueur - 1 and self.tableau[y][x + 1] == 0)
-                    ):
-                        return True
-
-        return False
 
     def obtenir_tuile(self, num_tuile):
         """
