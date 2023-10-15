@@ -24,7 +24,8 @@ class Grille:
         initialisé selon les attributs longueur(int) et hauteur(int) de l'objet
         """
 
-        self.tableau = [[0 for x in range(self.longueur)] for y in range(self.hauteur)]
+        self.tableau = [[0 for x in range(self.longueur)]
+                        for y in range(self.hauteur)]
 
     def est_vide(self):
         """
@@ -41,7 +42,7 @@ class Grille:
     def choisir_trimino(self, coordonnees, type_tuile):
         """
         Méthode qui retourne une liste de coordonnées tuple d'une tuile selon la coordonné choisie et son type
-        Type 0: L ;Type 1: Г ;Type 2: ꓶ ;Type 3: ⅃
+        Type 1: L ;Type 2: Г ;Type 3: ꓶ ;Type 4: ⅃
         la case de coordonnées (x, y) représente en colonne x et en ligne y.
         premiere coordonée d'après l'angle puis horizontale et vertical
         """
@@ -89,7 +90,6 @@ class Grille:
 
         return False
 
-
     def obtenir_tuile(self, num_tuile):
         """
         Méthode qui obtient les coordonées de la tuile 'num_tuile'
@@ -111,20 +111,25 @@ class Grille:
     def enlever_tuile(self):
         """
         Méthode qui enlève la dernière tuile posée
+        et retourne les coordonées de la tuile enlevé
         """
+        if self.num_actuel > 1:
 
-        for y in range(self.hauteur):
-            for x in range(self.longueur):
-                if self.tableau[y][x] == self.num_actuel-1:
-                    self.tableau[y][x] = 0
+            liste_coord_triminos = []
 
-        self.num_actuel -= 1
+            for y in range(self.hauteur):
+                for x in range(self.longueur):
+                    if self.tableau[y][x] == self.num_actuel-1:
+                        self.tableau[y][x] = 0
+                        liste_coord_triminos.append((x, y))
+
+            self.num_actuel -= 1
+            return liste_coord_triminos
 
     def __str__(self):
         """
         Affiche une belle matrice
         """
-
         line = "-" + "-" * 4 * self.longueur + "\n"
         s = line
         for l in self.tableau:
@@ -183,8 +188,9 @@ class Grille:
 
 
 if __name__ == "__main__":
-    print(Grille(6, 5))
 
+    grille = Grille(3, 4)
+    grille.creer_tableau()
+    print(grille)
 
-grille = Grille(3, 4)
-print(grille.est_pavable())
+    print(grille.est_pavable())
