@@ -24,8 +24,7 @@ class Grille:
         initialisé selon les attributs longueur(int) et hauteur(int) de l'objet
         """
 
-        self.tableau = [[0 for x in range(self.longueur)]
-                        for y in range(self.hauteur)]
+        self.tableau = [[0 for x in range(self.longueur)] for y in range(self.hauteur)]
 
     def est_vide(self):
         """
@@ -114,12 +113,11 @@ class Grille:
         et retourne les coordonées de la tuile enlevé
         """
         if self.num_actuel > 1:
-
             liste_coord_triminos = []
 
             for y in range(self.hauteur):
                 for x in range(self.longueur):
-                    if self.tableau[y][x] == self.num_actuel-1:
+                    if self.tableau[y][x] == self.num_actuel - 1:
                         self.tableau[y][x] = 0
                         liste_coord_triminos.append((x, y))
 
@@ -185,10 +183,47 @@ class Grille:
         return (
             (self.longueur * self.hauteur) % 3
         ) == 0  # Comme on pose des figures qui sont composées de 3 pavés il faut vérifier que notre quadrillage peut être recouvert de figures"""
+        
+    def avoir_num_actuel(self):
+        max = 0
+        for y in range(self.hauteur):
+            for x in range(self.longueur):
+                if self.tableau[y][x] > max:
+                    max = self.tableau[y][x]
+        self.num_actuel = max+1
+
+    def paver_recursif_une_solution(self):
+        if self.est_pavable():
+            if not self.verifier_tuile_vide():
+                if self.cases_vide() == []:
+                    return self.tableau
+
+            for x, y in self.cases_vide():
+                for type_tuile in range(4):
+                    if self.ajouter_tuile(x, y, type_tuile):
+                        if self.paver_recursif_une_solution():
+                            return True
+                        self.enlever_tuile()
+
+            return False
+
+    def paver_recursif_toutes_solutions(self, solutions=[]):
+        if self.est_pavable():
+            if not self.verifier_tuile_vide():
+                if self.cases_vide() == []:
+                    tableau = [[elm for elm in ligne] for ligne in self.tableau]
+                    grille = Grille(self.longueur, self.hauteur, tableau)
+                    solutions.append(grille)
+                    return
+
+            for x, y in self.cases_vide():
+                for type_tuile in range(4):
+                    if self.ajouter_tuile(x, y, type_tuile):
+                        self.paver_recursif_toutes_solutions(solutions)
+                        self.enlever_tuile()
 
 
 if __name__ == "__main__":
-
     grille = Grille(3, 4)
     grille.creer_tableau()
     print(grille)

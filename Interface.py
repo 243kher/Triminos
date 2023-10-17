@@ -189,6 +189,31 @@ class Interface(Grille):
         else:
             self.text.set_text("Tu ne peux pas posé ce trimino")
             self.fig.canvas.draw()
+            
+    def dessiner_triminos_tableau(self):
+        self.avoir_num_actuel()
+        if self.num_actuel > 1:
+            for i in range(1,self.num_actuel):
+                coord = self.obtenir_tuile(i)
+                
+                #duplqué à voir pour simplifier
+                
+                ensemble_couleur = set()
+                # chaque case prend la couleur de la case à gauche à droite en bas en haut
+                for x, y in coord:
+                    adjacent_coords = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+                    # ne la prend pas si hors de la grille
+                    for x, y in adjacent_coords:
+                        if self.longueur > x >= 0 and self.hauteur > y >= 0:
+                            ensemble_couleur.add(self.couleurs[y][x])
+                            
+                couleur = self.donner_couleur(self.verifier_couleur_adjacent(ensemble_couleur))
+                
+                for x, y in coord: 
+                    
+                    self.dessiner_case((x,y),couleur)
+                
+
 
     def afficher(self):
         plt.show()
