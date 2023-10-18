@@ -191,7 +191,7 @@ class Interface(Grille):
             self.fig.canvas.draw()
             
     def dessiner_triminos_tableau(self):
-        self.avoir_num_actuel()
+        self.update_num_actuel()
         if self.num_actuel > 1:
             for i in range(1,self.num_actuel):
                 coord = self.obtenir_tuile(i)
