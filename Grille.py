@@ -196,7 +196,7 @@ class Grille:
         if self.est_pavable():
             if not self.verifier_tuile_vide():
                 if self.cases_vide() == []:
-                    return self.tableau
+                    return True
 
             for x, y in self.cases_vide():
                 for type_tuile in range(4):
