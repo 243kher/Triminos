@@ -1,353 +1,231 @@
-#main
+class Grille:
+    def __init__(self, longueur, hauteur, tableau=[]):
+        """
+        Initialise une instance de la classe Grille avec une longueur, une hauteur et un tableau.
 
-import random
-import copy
-import time
-
-class Grille :
-    def __init__(self, nb_cases):
-        self.nb_cases = nb_cases
-        self.tableau =  []
+        longueur: La longueur de la grille (nombre de colonnes).
+        hauteur: La hauteur de la grille (nombre de lignes).
+        tableau: Le tableau représentant la grille (par défaut vide).
+        """
+        self.longueur = longueur
+        self.hauteur = hauteur
+        self.tableau = tableau
+        self.num_actuel = 1
+        self.format_tuile = [
+            [(1, 0), (0, -1)],
+            [(1, 0), (0, 1)],
+            [(-1, 0), (0, 1)],
+            [(-1, 0), (0, -1)],
+        ]
 
     def creer_tableau(self):
-        self.tableau =  [[0 for t in range(self.nb_cases)] for i in range(self.nb_cases)]
-
-    def __str__(self):
-        tableau = ""
-        for t in range(self.nb_cases):
-            tableau += "| "
-            for k in range(self.nb_cases):
-                tableau += str(self.tableau[t][k])+ " | "
-            tableau += "\n"
-            for k in range(self.nb_cases):
-                tableau += "-"*self.nb_cases
-            tableau += "\n"
-        return tableau
-        
-    def verifie_liste(self, liste):
         """
-        Fonction qui renvoie True s'il y a n chiffres, de 1 à n, dans la liste,
-        sinon la fonction renvoie False.
-
-        Args:
-            liste (list): La liste à vérifier.
-
-        Returns:
-            bool: True si la liste contient les chiffres de 1 à n, False sinon.
+        Méthode qui créer un tableau (list)
+        initialisé selon les attributs longueur(int) et hauteur(int) de l'objet
         """
 
-        n = 0
-        for t in range(1, len(liste) + 1):
-            if t in liste:
-                n += 1
-        return n == self.nb_cases
-    
-    def indices_region(self, i, j):
-        """
-        Renvoie les indices des cases dans la même région (3x3) que la case (i, j).
+        self.tableau = [[0 for x in range(self.longueur)] for y in range(self.hauteur)]
 
-        Args:
-            i (int): Coordonnée i de la case.
-            j (int): Coordonnée j de la case.
-
-        Returns:
-            list: Liste des tuples (x, y) correspondant aux indices des cases dans la même région.
+    def est_vide(self):
         """
-        taille_region = int(self.nb_cases ** 0.5)
-        region_i, region_j = i // taille_region, j // taille_region
-        indices = []
-        for x in range(region_i * taille_region, (region_i + 1) * taille_region):
-            for y in range(region_j * taille_region, (region_j + 1) * taille_region):
-                if (x, y) != (i, j):
-                    indices.append((x, y))
-        return indices
-    
-    def est_sudoku(self, tableau):
+        Méthode qui retourne True si le tableau est vide, False sinon.
 
         """
-        Fonction qui vérifie si un tableau donné est un Sudoku valide.
 
-        Args:
-            tableau (list): Le tableau à vérifier.
-
-        Returns:
-            bool: True si le tableau est un Sudoku valide, False sinon.
-        """
-        for ligne in tableau:
-            assert isinstance(ligne, list), "Chaque ligne du tableau doit être une liste"
-            assert len(ligne) == 9, "Chaque ligne du tableau doit contenir 9 éléments"
-
-            assert all(isinstance(element, int) for element in ligne), "Chaque élément du tableau doit être un entier"
-
-        # Vérification des lignes et des colonnes
-        for t in range(len(tableau)):
-            liste = []
-            for k in range(len(tableau)):
-                liste.append(tableau[k][t])
-                if not self.verifie_liste(tableau[t]):
+        for y in range(self.hauteur):
+            for x in range(self.longueur):
+                if self.tableau[y][x] != 0:
                     return False
-            if not self.verifie_liste(liste):
-                return False
-
-        # Vérification des régions
-        taille_region = int(self.nb_cases ** 0.5)
-        for t in range(len(tableau)):
-            liste=[tableau[taille_region * (t % taille_region)][taille_region * (t // taille_region)]]
-            for l in range(len(tableau)-1):
-                x,y=self.indices_region(taille_region * (t % taille_region),taille_region * (t // taille_region))[l]
-                liste.append(tableau[x][y])
-            if not self.verifie_liste(liste):
-                return False
-
         return True
 
-    def tableau_case_vides(self, tableau):
+    def choisir_trimino(self, coordonnees, type_tuile):
         """
-        Fonction qui renvoie une liste des tuples correspondant aux coordonnées des cases vides dans le tableau.
-
-        Args:
-            tableau (list): Le tableau de Sudoku.
-
-        Returns:
-            list: Liste des tuples (x, y) correspondant aux coordonnées des cases vides.
+        Méthode qui retourne une liste de coordonnées tuple d'une tuile selon la coordonné choisie et son type
+        Type 1: L ;Type 2: Г ;Type 3: ꓶ ;Type 4: ⅃
+        la case de coordonnées (x, y) représente en colonne x et en ligne y.
+        premiere coordonée d'après l'angle puis horizontale et vertical
         """
-        
-        liste = []
-        for t in range(len(tableau)):
-            for k in range(len(tableau)):
-                if tableau[t][k] == 0:
-                    liste.append((t, k))
-        return liste
+        return [
+            coordonnees,
+            (
+                coordonnees[0] + self.format_tuile[type_tuile][0][0],
+                coordonnees[1] + self.format_tuile[type_tuile][0][1],
+            ),
+            (
+                coordonnees[0] + self.format_tuile[type_tuile][1][0],
+                coordonnees[1] + self.format_tuile[type_tuile][1][1],
+            ),
+        ]
 
-    def tableau_case_non_vides(self, tableau):
+    def cases_vide(self):
         """
-        Fonction qui renvoie une liste des tuples correspondant aux coordonnées des cases non vides dans le tableau.
-
-        Args:
-            tableau (list): Le tableau de Sudoku.
-
-        Returns:
-            list: Liste des tuples (x, y) correspondant aux coordonnées des cases non vides.
+        Méthode qui retourne une liste des coordonnées des cases vides dans le tableau.
         """
-        
-        liste = []
-        for t in range(len(tableau)):
-            for k in range(len(tableau)):
-                if not tableau[t][k] == 0:
-                    liste.append((t, k))
-        return liste
+        liste_vide = []
+        for y in range(self.hauteur):
+            for x in range(self.longueur):
+                if self.tableau[y][x] == 0:
+                    liste_vide.append((x, y))
+        return liste_vide
 
-
-    def choix_possibles(self, tableau, x, y):
+    def verifier_tuile_vide(self):
         """
-        Retourne une liste de valeurs possibles pour la case (x, y).
+        Méthode qui vérifie si une tuile peut être placée dans des cases vides adjacentes.
 
-        Args:
-            tableau (list): Le tableau de Sudoku.
-            x (int): Coordonnée x de la case.
-            y (int): Coordonnée y de la case.
-
-        Returns:
-            list: Liste des valeurs possibles pour la case (x, y).
+        liste_vide: La liste des coordonnées des cases vides.
+        return: True si une tuile peut être placée, False sinon.
         """
-
-
-        # Ensemble de toutes les valeurs possibles dans un Sudoku
-        valeurs_possibles = {0}
-
-        for k in range(1, self.nb_cases + 1):
-            valeurs_possibles.add(k)
-        valeurs_possibles.remove(0)
-
-        # Ensemble des valeurs présentes dans la même ligne que la case (x, y)
-        valeurs_ligne = {tableau[x][j] for j in range(self.nb_cases)}
-
-        # Ensemble des valeurs présentes dans la même colonne que la case (x, y)
-        valeurs_colonne = {tableau[i][y] for i in range(self.nb_cases)}
-
-        # Ensemble des valeurs présentes dans la même région que la case (x, y)
-        valeurs_region = {tableau[i][j] for i,j in self.indices_region(x,y)}
-
-        # Exclusion des valeurs déjà présentes de l'ensemble des valeurs possibles
-        valeurs_possibles -= valeurs_ligne | valeurs_colonne | valeurs_region
-
-        return list(valeurs_possibles)
-
-    def selectionner_case(self, tableau):
-
-        """
-        Retourne la prochaine case à remplir dans le tableau de Sudoku.
-
-        Args:
-            tableau (list): Le tableau de Sudoku.
-
-        Returns:
-            tuple: Coordonnées (x, y) de la case à remplir suivante, ou None si toutes les cases sont remplies.
-
-        Description:
-            Cette méthode identifie la case vide à remplir suivante dans le tableau de Sudoku.
-            Elle utilise la méthode `tableau_case_vides` pour obtenir une liste de toutes les cases vides.
-            Si aucune case vide n'est trouvée, la méthode renvoie None pour indiquer que toutes les cases sont remplies.
-            Sinon, la méthode utilise la fonction `min` avec une fonction lambda pour déterminer la case vide ayant le moins d'options possibles.
-            La fonction lambda renvoie la longueur de la liste des choix possibles pour chaque case vide, et `min` renvoie la case vide correspondante.
-        """
-
-        cases_vides = self.tableau_case_vides(tableau)
-        if len(cases_vides) == 0:
-            return None
-
-        return min(cases_vides, key=lambda case: len(self.choix_possibles(tableau, case[0], case[1])))
-
-    def ajouter_valeur(self, tableau, nb_ajouter, x, y):
-        """
-        Fonction qui ajoute une valeur donnée aux coordonnées spécifiées du tableau.
-
-        Args:
-            tableau (list): Le tableau de Sudoku.
-            nb_ajouter (int): La valeur à ajouter.
-            x (int): La coordonnée x de la case.
-            y (int): La coordonnée y de la case.
-        """
-
-        tableau[x][y] = nb_ajouter
-
-    def completer_sudoku(self, tableau):
-        """
-        Vérifie s'il est possible de compléter le Sudoku et retourne le tableau completé.
-
-        Args:
-            tableau (list): Le tableau de Sudoku à compléter.
-
-        Returns:
-            tuple: Un tuple (booléen, tableau) indiquant si le Sudoku a été complété avec succès et le tableau completé.
-
-        Description:
-            Cette méthode vérifie s'il est possible de compléter le Sudoku en utilisant une approche récursive.
-            Elle utilise une fonction interne `completer` pour effectuer la vérification récursive.
-            Si le Sudoku peut être complété, la méthode renvoie True et le tableau completé.
-            Sinon, elle renvoie False et le tableau partiellement rempli.
-        """
-
-
-        def completer(tableau):
-            """
-            Fonction récursive interne pour compléter le Sudoku.
-
-            Args:
-                tableau (list): Le tableau de Sudoku à compléter.
-
-            Returns:
-                bool: True si le Sudoku a été complété avec succès, False sinon.
-            """
-            if not self.tableau_case_vides(tableau):
-                return True
-            else:
-                x, y = self.selectionner_case(tableau)
-            for t in self.choix_possibles(tableau, x, y):
-                self.ajouter_valeur(tableau, t, x, y)
-                if completer(tableau):
+        liste_vide = self.cases_vide()
+        for t in liste_vide:
+            for k in range(4):
+                if (
+                    t[0] + self.format_tuile[k][0][0],
+                    t[1] + self.format_tuile[k][0][1],
+                ) in liste_vide and (
+                    t[0] + self.format_tuile[k][1][0],
+                    t[1] + self.format_tuile[k][1][1],
+                ) in liste_vide:
                     return True
-                self.ajouter_valeur(tableau, 0, x, y)
+
+        return False
+
+    def obtenir_tuile(self, num_tuile):
+        """
+        Méthode qui obtient les coordonées de la tuile 'num_tuile'
+        num_tuile : int
+        renvoie une liste de tuple de coordonées (x,y) de la tuile 'num_tuile'
+        """
+        if num_tuile > self.num_actuel:
+            return []
+
+        coordonnees = []
+
+        for y in range(self.hauteur):
+            for x in range(self.longueur):
+                if self.tableau[y][x] == num_tuile:
+                    coordonnees.append((x, y))
+
+        return coordonnees
+
+    def enlever_tuile(self):
+        """
+        Méthode qui enlève la dernière tuile posée
+        et retourne les coordonées de la tuile enlevé
+        """
+        if self.num_actuel > 1:
+            liste_coord_triminos = []
+
+            for y in range(self.hauteur):
+                for x in range(self.longueur):
+                    if self.tableau[y][x] == self.num_actuel - 1:
+                        self.tableau[y][x] = 0
+                        liste_coord_triminos.append((x, y))
+
+            self.num_actuel -= 1
+            return liste_coord_triminos
+
+    def __str__(self):
+        """
+        Affiche une belle matrice
+        """
+        line = "-" + "-" * 4 * self.longueur + "\n"
+        s = line
+        for l in self.tableau:
+            s += "| "
+            for x in l:
+                s += str(x) + " | "
+            s += "\n" + line
+        return s
+
+    def ajouter_tuile(self, x, y, type_tuile):
+        """
+        Méthode qui tente d'ajouter une tuile au tableau à partir des coordonnées spécifiées et du type de tuile.
+
+        x: La coordonnée x de la case où la tuile sera ajoutée.
+        y: La coordonnée y de la case où la tuile sera ajoutée.
+        type_tuile: Le type de tuile à ajouter.
+        return: True si l'ajout est possible, False sinon.
+        """
+        if x < 0 or x >= self.longueur or y < 0 or y >= self.hauteur:
+            return False
+        tuile_coordonnees = self.choisir_trimino((x, y), type_tuile)
+
+        for x, y in tuile_coordonnees:
+            if (
+                x < 0
+                or x >= self.longueur
+                or y < 0
+                or y >= self.hauteur
+                or self.tableau[y][x] != 0
+            ):
+                return False
+
+        for x, y in tuile_coordonnees:
+            self.tableau[y][x] = self.num_actuel
+
+        self.num_actuel += 1
+        return True
+
+    def obtenir_l(self):
+        """
+        Méthode qui retourne la longueur de la grille.
+        """
+        return self.longueur
+
+    def obtenir_h(self):
+        """
+        Méthode qui retourne la hauteur de la grille.
+        """
+        return self.hauteur
+
+    def est_pavable(self):
+        """Méthode qui vérifie que la grille est pavable"""
+        return (
+            (self.longueur * self.hauteur) % 3
+        ) == 0  # Comme on pose des figures qui sont composées de 3 pavés il faut vérifier que notre quadrillage peut être recouvert de figures"""
+        
+    def avoir_num_actuel(self):
+        max = 0
+        for y in range(self.hauteur):
+            for x in range(self.longueur):
+                if self.tableau[y][x] > max:
+                    max = self.tableau[y][x]
+        self.num_actuel = max+1
+
+    def paver_recursif_une_solution(self):
+        if self.est_pavable():
+            if not self.verifier_tuile_vide():
+                if self.cases_vide() == []:
+                    return True
+
+            for x, y in self.cases_vide():
+                for type_tuile in range(4):
+                    if self.ajouter_tuile(x, y, type_tuile):
+                        if self.paver_recursif_une_solution():
+                            return True
+                        self.enlever_tuile()
+
             return False
 
-        nouveau_tableau = copy.deepcopy(tableau)
+    def paver_recursif_toutes_solutions(self, solutions=[]):
+        if self.est_pavable():
+            if not self.verifier_tuile_vide():
+                if self.cases_vide() == []:
+                    tableau = [[elm for elm in ligne] for ligne in self.tableau]
+                    grille = Grille(self.longueur, self.hauteur, tableau)
+                    solutions.append(grille)
+                    return
 
-        if completer(nouveau_tableau):
-            return True, nouveau_tableau
-        else:
-            return False, nouveau_tableau
-
-
-    def creer_sudoku_complet(self):
-        """
-        Fonction qui retourne un tableau de Sudoku complet.
-
-        Returns:
-            tableau (list): Tableau de Sudoku généré.
-
-        Description:
-            Cette méthode génère un tableau de Sudoku en fonction du niveau de difficulté spécifié lors de l'initialisation de l'objet Sudoku.
-            Le tableau est généré en remplissant certaines cases avec des valeurs aléatoires et en vérifiant si le Sudoku peut être complété.
-            Si le Sudoku est impossible à compléter, les valeurs des cases précédemment remplies sont réinitialisées à zéro.
-        """
-
-        tableau = [[0 for _ in range(self.nb_cases)] for _ in range(self.nb_cases)]  # Crée un tableau vide
-
-        # Remplissage du tableau avec des valeurs aléatoires
-        while not self.tableau_case_vides(tableau) == []:
-            x , y = random.randint(0,self.nb_cases-1),random.randint(0,self.nb_cases-1) # Sélectionne une case aléatoire
-            if tableau[x][y] == 0: # Vérifie si la case est vide
-                tableau[x][y] = random.choice(self.choix_possibles(tableau, x, y)) # Remplit la case avec une valeur aléatoire parmi les choix possibles
-                if not self.completer_sudoku(tableau)[0]:# Vérifie si le Sudoku peut être complété
-                    tableau[x][y] = 0
-                    
-        return tableau
-
-    def creer_sudoku(self):
-        """
-        Fonction qui retourne un tableau de Sudoku en fonction du niveau de difficulté.
-
-        Returns:
-            tableau (list): Tableau de Sudoku généré.
-
-        Description:
-            Cette méthode génère un tableau de Sudoku en fonction du niveau de difficulté spécifié lors de l'initialisation de l'objet Sudoku.
-            Le tableau est généré en remplissant certaines cases avec des valeurs aléatoires et en vérifiant si le Sudoku peut être complété.
-            Si le Sudoku est impossible à compléter, les valeurs des cases précédemment remplies sont réinitialisées à zéro.
-        """
+            for x, y in self.cases_vide():
+                for type_tuile in range(4):
+                    if self.ajouter_tuile(x, y, type_tuile):
+                        self.paver_recursif_toutes_solutions(solutions)
+                        self.enlever_tuile()
 
 
-        tableau = self.creer_sudoku_complet()  # Crée un tableau complet de Sudoku
-        cases_non_vides=self.tableau_case_non_vides(tableau)
-        x, y= random.choice(cases_non_vides)
-        tableau[x][y] = 0
-        cases_non_vides.remove((x,y))
-        
-        while self.comptage_des_solution(tableau) == 1:
-            x, y= random.choice(cases_non_vides)
-            nb=tableau[x][y]
-            tableau[x][y] = 0
-            cases_non_vides.remove((x,y))
-        tableau[x][y]=nb
-        return tableau
-    
-        
-    def comptage_des_solution(self, tableau):
-        
-        if not self.completer_sudoku(tableau)[0]:
-            return 0
-        if len(self.tableau_case_vides(tableau)) == 0:
-            return 1        
-        x,y = self.tableau_case_vides(tableau)[0]
-        comptage = 0
-        for valeur in self.choix_possibles(tableau, x, y):
-            tableau[x][y] = valeur 
-            result = self.comptage_des_solution(tableau)
-            comptage = comptage + result
-            tableau[x][y] = 0
-        return comptage
-    
-t=Grille(9)
-t.creer_tableau()
-sudoku_valide = [
-        [5, 3, 4, 6, 7, 8, 9, 1, 2],
-        [6, 7, 2, 1, 9, 5, 3, 4, 8],
-        [1, 9, 8, 3, 4, 2, 5, 6, 7],
-        [8, 5, 9, 7, 6, 1, 4, 2, 3],
-        [4, 2, 6, 8, 5, 3, 7, 9, 1],
-        [7, 1, 3, 9, 2, 4, 8, 5, 6],
-        [9, 6, 1, 5, 3, 7, 2, 8, 4],
-        [2, 8, 7, 4, 1, 9, 6, 3, 5],
-        [3, 4, 5, 2, 8, 6, 1, 7, 9]
-    ]
-sudoku_a_faire = [
-        [5, 0, 0, 0, 7, 0, 0, 0, 0],
-        [6, 0, 0, 1, 9, 5, 0, 0, 0],
-        [0, 9, 8, 0, 0, 0, 0, 0, 0],
-        [8, 0, 0, 0, 6, 0, 0, 0, 3],
-        [4, 0, 0, 8, 0, 3, 0, 0, 1],
-        [7, 0, 0, 0, 2, 0, 0, 0, 6],
-        [0, 6, 0, 0, 0, 0, 0, 8, 0],
-        [0, 0, 0, 4, 1, 9, 0, 0, 5],
-        [0, 0, 0, 0, 8, 0, 0, 7, 9]
-    ]
+if __name__ == "__main__":
+    grille = Grille(3, 4)
+    grille.creer_tableau()
+    print(grille)
+
+    print(grille.est_pavable())
